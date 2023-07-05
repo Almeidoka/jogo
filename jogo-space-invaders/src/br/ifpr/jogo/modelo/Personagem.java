@@ -15,8 +15,8 @@ public class Personagem {
     private Image imagemPersonagem;
     private int larguraImagem;
     private int alturaImagem;
-    private List <Tiro> tiro;
-    private boolean isVisivel;
+    private List<Tiro> tiro;
+    private boolean Visivel;
 
     /* Criação de constante */
     private static final int POSICAO_INICIAL_X = 100;
@@ -26,7 +26,7 @@ public class Personagem {
     public Personagem() {
         this.posicaoX = POSICAO_INICIAL_X;
         this.posicaoY = POSICAO_INICIAL_Y;
-        isVisivel=true;
+        Visivel = true;
 
         //
         tiro = new ArrayList<Tiro>();
@@ -34,14 +34,13 @@ public class Personagem {
     }
 
     public void carregar() {
-        ImageIcon carregar = new ImageIcon(
-                "arquivos\\psg_1.png");
+        ImageIcon carregar = new ImageIcon("arquivos\\psg_1.png");
         this.imagemPersonagem = carregar.getImage();
         this.alturaImagem = this.imagemPersonagem.getWidth(null);
         this.larguraImagem = this.imagemPersonagem.getHeight(null);
     }
 
-    //código de movimentação e códgo extra para adicionar colisão (Adaptado)
+    // código de movimentação e códgo extra para adicionar colisão (Adaptado)
     public void update() {
 
         if (posicaoX < 1) {
@@ -59,12 +58,12 @@ public class Personagem {
 
     }
 
-    //crição de um novo tiro, que será utilizado dentro do keypressed
-    public void tiros(){
-        this.tiro.add(new Tiro(posicaoX+larguraImagem, (posicaoY+alturaImagem/2)));
+    // crição de um novo tiro, que será utilizado dentro do keypressed
+    public void tiros() {
+        this.tiro.add(new Tiro(posicaoX + larguraImagem, (posicaoY + alturaImagem / 2)));
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle(posicaoX, posicaoY, larguraImagem, alturaImagem);
     }
 
@@ -166,18 +165,16 @@ public class Personagem {
         this.tiro = tiro;
     }
 
-
-    public boolean isIsVisivel() {
-        return this.isVisivel;
+    public boolean isVisivel() {
+        return this.Visivel;
     }
 
-    public boolean getIsVisivel() {
-        return this.isVisivel;
+    public boolean getVisivel() {
+        return this.Visivel;
     }
 
-    public void setIsVisivel(boolean isVisible) {
-        this.isVisivel = isVisible;
+    public void setVisivel(boolean isVisible) {
+        this.Visivel = isVisible;
     }
-    
 
 }

@@ -21,6 +21,7 @@ public class Fase extends JPanel implements ActionListener {
     private Image imagemDeFundo;
     private Timer timer;
     private List<Inimigo> inimigo;
+    private boolean emJogo;
 
     public static final int DESLOCAMENTO = 3;
     public static final int DELEY = 10;
@@ -35,38 +36,45 @@ public class Fase extends JPanel implements ActionListener {
         addKeyListener(new TecladoAdapter());
         timer = new Timer(DELEY, this);
         timer.start();
-
+        emJogo = true;
         inicializarinimigo();
 
     }
-    public void inicializarinimigo(){
-        int cordenadas []= new int [40];
+
+    public void inicializarinimigo() {
+        int cordenadas[] = new int[40];
         inimigo = new ArrayList<Inimigo>();
-        for(int i = 0;i < cordenadas.length; i++){
-            int x = (int)(Math.random()*8000+500);
-            int y = (int)(Math.random()*318+30);
+        for (int i = 0; i < cordenadas.length; i++) {
+            int x = (int) (Math.random() * 8000 + 500);
+            int y = (int) (Math.random() * 318 + 30);
             inimigo.add(new Inimigo(x, y));
         }
     }
 
     public void paint(Graphics g) {
         Graphics2D graficos = (Graphics2D) g;
-        graficos.drawImage(this.imagemDeFundo, 0, 0, null);
-        graficos.drawImage(personagem.getImagemPersonagem(), personagem.getPosicaoX(), personagem.getPosicaoY(), this);
-        //implementando o tiro no personagem
-        List<Tiro> tiro = personagem.getTiro();
-        for(int i=0;i<tiro.size();i++){
-            Tiro m = tiro.get(i);
-            m.load();
-            graficos.drawImage(m.getImagem(), m.getX(), m.getY(),this);
+        if (emJogo == true) {
+            graficos.drawImage(this.imagemDeFundo, 0, 0, null);
+            graficos.drawImage(personagem.getImagemPersonagem(), personagem.getPosicaoX(), personagem.getPosicaoY(),
+                    this);
+            // implementando o tiro no personagem
+            List<Tiro> tiro = personagem.getTiro();
+            for (int i = 0; i < tiro.size(); i++) {
+                Tiro m = tiro.get(i);
+                m.load();
+                graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
+            }
+            // implementando inimigos
+            for (int j = 0; j < inimigo.size(); j++) {
+                Inimigo in = inimigo.get(j);
+                in.load();
+                graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
+            }
+        } else {
+            ImageIcon fimDeJogo = new ImageIcon("arquivos\\gameOver.png");
+            graficos.drawImage(fimDeJogo.getImage(), 0, 0, null);
         }
-        //implementando inimigos
-        for(int j=0;j < inimigo.size(); j++){
-            Inimigo in = inimigo.get(j);
-            in.load();
-            graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
-        }
-        
+
         g.dispose();
     }
 
@@ -74,38 +82,40 @@ public class Fase extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         personagem.update();
         List<Tiro> tiro = personagem.getTiro();
-        for(int i=0;i<tiro.size();i++){
+        for (int i = 0; i < tiro.size(); i++) {
             Tiro m = tiro.get(i);
-            if(m.isVisivel()){
+            if (m.isVisivel()) {
                 m.update();
-            }else{
+            } else {
                 tiro.remove(i);
             }
         }
-        
-        for(int j=0;j < inimigo.size(); j++){
+
+        for (int j = 0; j < inimigo.size(); j++) {
             Inimigo in = inimigo.get(j);
-            if(in.isVisivel()){
+            if (in.isVisivel()) {
                 in.update();
-            }else{
-               inimigo.remove(j); 
+            } else {
+                inimigo.remove(j);
             }
         }
-        
+
         repaint();
     }
-    public void checarColisoes(){
+
+    public void checarColisoes() {
         Rectangle formaNave = personagem.getBounds();
         Rectangle formaInimigo;
         Rectangle formaTiro;
 
-        for(int i=0;i<inimigo.size();i++){
+        for (int i = 0; i < inimigo.size(); i++) {
             Inimigo tempInimigo = inimigo.get(i);
             formaInimigo = tempInimigo.getBounds();
-                if(formaNave.intersects(formaInimigo)){
-                    personagem.setIsVisivel(false);
-                    tempInimigo.setVisivel(false);
-                }
+            if (formaNave.intersects(formaInimigo)) {
+                personagem.setVisivel(false);
+                tempInimigo.setVisivel(false);
+                emJogo = false;
+            }
         }
     }
 
